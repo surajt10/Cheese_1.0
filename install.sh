@@ -1,11 +1,11 @@
 #!/bin/bash
 # Cheese1.0 one-line installer for macOS.
-#   curl -fsSL https://raw.githubusercontent.com/GITHUB_USER/cheese/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/surajt10/Cheese_1.0/main/install.sh | bash
 # No Homebrew, no admin password. Downloads a private copy of Node, builds the app, installs it to /Applications.
 set -euo pipefail
 
-GITHUB_USER="${CHEESE_GITHUB_USER:-GITHUB_USER}"
-REPO="https://github.com/${GITHUB_USER}/cheese"
+GITHUB_REPO="${CHEESE_REPO:-surajt10/Cheese_1.0}"   # owner/name
+REPO="https://github.com/${GITHUB_REPO}"
 APP="/Applications/Cheese1.0.app"
 WORK="$HOME/.cheese-install"
 NODE_DIR="$WORK/node"
@@ -17,6 +17,7 @@ die() { printf '\n\033[1;31m✗ %s\033[0m\n' "$*" >&2; exit 1; }
 ARCH="$(uname -m)"; [[ "$ARCH" == "arm64" ]] && NODE_ARCH="darwin-arm64" || NODE_ARCH="darwin-x64"
 [[ "$ARCH" == "arm64" ]] && EB_ARCH="arm64" || EB_ARCH="x64"
 
+cd "$HOME"
 mkdir -p "$WORK"
 
 # ---- Fast path: a prebuilt DMG attached to the GitHub release ----
