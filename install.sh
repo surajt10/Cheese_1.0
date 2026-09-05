@@ -13,6 +13,15 @@ NODE_DIR="$WORK/node"
 say() { printf '\n\033[1;33m🧀 %s\033[0m\n' "$*"; }
 die() { printf '\n\033[1;31m✗ %s\033[0m\n' "$*" >&2; exit 1; }
 
+install_dmg() {
+  local dmg="$1" mnt
+  mnt="$(hdiutil attach -nobrowse -noautoopen "$dmg" | grep -o '/Volumes/.*' | tail -1)"
+  [[ -n "$mnt" && -d "$mnt/Cheese1.0.app" ]] || die "Couldn't mount $dmg"
+  rm -rf "$APP"
+  cp -R "$mnt/Cheese1.0.app" "$APP" || die "Couldn't copy into /Applications"
+  hdiutil detach "$mnt" -quiet || true
+}
+
 [[ "$(uname)" == "Darwin" ]] || die "This installer is for macOS only."
 ARCH="$(uname -m)"; [[ "$ARCH" == "arm64" ]] && NODE_ARCH="darwin-arm64" || NODE_ARCH="darwin-x64"
 [[ "$ARCH" == "arm64" ]] && EB_ARCH="arm64" || EB_ARCH="x64"
@@ -24,9 +33,7 @@ mkdir -p "$WORK"
 DMG_URL="${REPO}/releases/latest/download/Cheese1.0-${EB_ARCH}.dmg"
 if curl -fsSL -o "$WORK/Cheese1.0.dmg" "$DMG_URL" 2>/dev/null; then
   say "Found a prebuilt Cheese1.0 for your Mac, installing…"
-  MNT="$(hdiutil attach -nobrowse -quiet "$WORK/Cheese1.0.dmg" | grep -o '/Volumes/.*' | head -1)"
-  rm -rf "$APP"; cp -R "$MNT/Cheese1.0.app" "$APP"
-  hdiutil detach -quiet "$MNT" || true
+  install_dmg "$WORK/Cheese1.0.dmg"
 else
   # ---- Build from source ----
   say "Downloading Cheese1.0 source…"
@@ -56,10 +63,8 @@ else
 
   DMG="$(ls dist/*.dmg | head -1)"
   say "Installing to /Applications…"
-  MNT="$(hdiutil attach -nobrowse -quiet "$DMG" | grep -o '/Volumes/.*' | head -1)"
-  rm -rf "$APP"; cp -R "$MNT/Cheese1.0.app" "$APP"
-  hdiutil detach -quiet "$MNT" || true
-  cp "$DMG" "$HOME/Downloads/Cheese1.0.dmg" 2>/dev/null || true
+  install_dmg "$DMG"
+  cp "$DMG" "$HOME/Downloads/Cheese1.0-${EB_ARCH}.dmg" 2>/dev/null || true
 fi
 
 # Unsigned app → strip the quarantine flag so Gatekeeper doesn't block it.
