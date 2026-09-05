@@ -1,0 +1,80 @@
+{
+  "name": "cheese",
+  "productName": "Cheese1.0",
+  "version": "1.0.0",
+  "description": "Screenshot-driven AI assistant that lives on its own desktop.",
+  "main": "main.js",
+  "author": "Anish",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --mac",
+    "dist:arm": "electron-builder --mac --arm64",
+    "dist:intel": "electron-builder --mac --x64",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "marked": "^18.0.11"
+  },
+  "devDependencies": {
+    "electron": "^44.2.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.anish.cheese",
+    "productName": "Cheese1.0",
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "providers.js",
+      "store.js",
+      "capture.js",
+      "index.html",
+      "app.js",
+      "style.css",
+      "settings.html",
+      "settings.js",
+      "package.json"
+    ],
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "category": "public.app-category.productivity",
+      "icon": "icon.png",
+      "identity": null,
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "extendInfo": {
+        "NSScreenCaptureUsageDescription": "Cheese1.0 takes screenshots of your screen so it can send them to your AI provider.",
+        "LSApplicationCategoryType": "public.app-category.productivity"
+      }
+    },
+    "dmg": {
+      "title": "Cheese1.0",
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
+  }
+}

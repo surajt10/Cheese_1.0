@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <title>Cheese1.0</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="tabbar">
+    <div class="tabs" id="tabs"></div>
+    <button class="add" id="btnNewTab" title="New conversation">+</button>
+    <button class="gear" id="btnSettings" title="Settings">⚙</button>
+  </div>
+
+  <div class="banner" id="permBanner" hidden>
+    <span>macOS hasn't granted Screen Recording permission yet, so screenshots will come out black.</span>
+    <button class="btn" id="btnPrivacy">Open Privacy settings</button>
+  </div>
+  <div class="banner" id="keyBanner" hidden>
+    <span>No API key set for the selected provider.</span>
+    <button class="btn" id="btnKeySettings">Open Settings</button>
+  </div>
+  <div class="banner" id="hotkeyBanner" hidden>
+    <span id="hotkeyBannerText"></span>
+    <button class="btn" id="btnHotkeySettings">Change hotkeys</button>
+  </div>
+
+  <div class="main">
+    <div class="messages" id="messages"><div class="inner" id="messagesInner"></div></div>
+  </div>
+
+  <div class="statusbar">
+    <div class="led" id="led"></div>
+    <div class="grow" id="statusText">Not sharing</div>
+    <span class="countdown" id="countdown"></span>
+    <div class="mode" id="modeSwitch" title="Toggle with hotkey">
+      <button data-mode="manual" id="modeManual">Manual</button>
+      <button data-mode="auto" id="modeAuto">Auto</button>
+    </div>
+    <button class="btn" id="btnCapture">Screenshot now <kbd id="kbdCapture"></kbd></button>
+    <button class="btn primary" id="btnStart">Start screen share</button>
+  </div>
+
+  <!-- screen picker -->
+  <div class="overlay" id="picker" hidden>
+    <div class="sheet">
+      <h3>Choose the screen to share</h3>
+      <p class="sub">Cheese will screenshot this screen when you press your hotkey (or automatically in Auto mode). After you pick, the app stops taking focus and stays on whatever desktop you put it on.</p>
+      <div class="sources" id="sources"></div>
+      <div class="row"><button class="btn" id="btnPickerCancel">Cancel</button></div>
+    </div>
+  </div>
+
+  <!-- lightbox -->
+  <div class="overlay lightbox" id="lightbox" hidden><img id="lightboxImg" alt="" /></div>
+
+  <div class="toasts" id="toasts"></div>
+
+  <script src="node_modules/marked/lib/marked.umd.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
